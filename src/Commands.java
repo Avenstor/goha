@@ -1,18 +1,44 @@
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 public class Commands extends ListenerAdapter {
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getMessage().getContentRaw().equalsIgnoreCase("!goha")) {
-            event.getChannel().sendMessage("3 zł").queue();
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        String message = getDiscordMessage(event);
+        if (message.equalsIgnoreCase("!goha")) {
+           sendMessage(event, "3 zł");
         }
-        if (event.getMessage().getContentRaw().equalsIgnoreCase("!tip")) {
+        if (message.equalsIgnoreCase("!tip")) {
             Tips tips = new Tips();
-            event.getChannel().sendMessage(tips.rollRandomTip()).queue();
+            sendMessage(event, tips.rollRandomTip());
         }
-        if (event.getMessage().getContentRaw().equalsIgnoreCase("!weather")) {
+        if (message.startsWith("!weather")) {
+            String weatherMessage = getWeather(event, "imperial");
+            sendMessage(event, weatherMessage);
+        }
+        //pogoda zawiercie
+        if (message.startsWith("!pogoda")) {
+            String weatherMessage = getWeather(event, "metric");
+            sendMessage(event, weatherMessage);
+        }
+    }
+
+    private String getWeather(MessageReceivedEvent event, String unit) {
+        String asd = event.getMessage().getContentRaw();
+        String[] words = asd.split(" ");
+        if (words.length < 2) {
+            return "oj nie nie byczq -1";
+        } else {
             Weather weather = new Weather();
-            event.getChannel().sendMessage(weather.checkWeather()).queue();
+            return weather.checkWeather(words[1], unit);
         }
+    }
+
+    private String getDiscordMessage(MessageReceivedEvent event) {
+        return event.getMessage().getContentRaw();
+    }
+
+    private void sendMessage(MessageReceivedEvent event, String message){
+        event.getChannel().sendMessage(message).queue();
     }
 }
