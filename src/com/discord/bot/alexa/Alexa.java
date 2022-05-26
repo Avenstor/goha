@@ -1,12 +1,13 @@
-package alexa;
+package com.discord.bot.alexa;
 
+import com.discord.bot.GenericMessageListener;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class Alexa extends ListenerAdapter {
+public class Alexa extends GenericMessageListener {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
@@ -28,14 +29,6 @@ public class Alexa extends ListenerAdapter {
         Random rng = new Random();
         int number = rng.nextInt(5);
         return tip[number];
-    }
-
-    private String getDiscordMessage(MessageReceivedEvent event) {
-        return event.getMessage().getContentRaw();
-    }
-
-    private void sendMessage(MessageReceivedEvent event, String message){
-        event.getChannel().sendMessage(message).queue();
     }
 
 }

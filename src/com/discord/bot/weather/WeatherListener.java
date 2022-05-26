@@ -1,14 +1,14 @@
-package weather;
+package com.discord.bot.weather;
 
-import alexa.Alexa;
+import com.discord.bot.GenericMessageListener;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public class WeatherListener extends ListenerAdapter {
+public class WeatherListener extends GenericMessageListener {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
-        if (message.startsWith("!weather")) {
+        if (message.startsWith("!com.discord.bot.weather")) {
             String weatherMessage = getWeather(event, Unit.IMPERIAL);
             sendMessage(event, weatherMessage);
         }
@@ -20,7 +20,7 @@ public class WeatherListener extends ListenerAdapter {
     }
 
     private String getWeather(MessageReceivedEvent event, Unit unit) {
-        String asd = event.getMessage().getContentRaw();
+        String asd = getDiscordMessage(event);
         String[] words = asd.split(" ");
         if (words.length < 2) {
             return "oj nie nie byczq -1";
@@ -28,13 +28,5 @@ public class WeatherListener extends ListenerAdapter {
             WeatherStation weatherStation = new WeatherStation();
             return weatherStation.checkWeather(words[1], unit);
         }
-    }
-
-    private String getDiscordMessage(MessageReceivedEvent event) {
-        return event.getMessage().getContentRaw();
-    }
-
-    private void sendMessage(MessageReceivedEvent event, String message){
-        event.getChannel().sendMessage(message).queue();
     }
 }

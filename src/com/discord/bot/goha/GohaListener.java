@@ -1,13 +1,14 @@
-package goha;
+package com.discord.bot.goha;
 
+import com.discord.bot.GenericMessageListener;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public class GohaListener extends ListenerAdapter {
+public class GohaListener extends GenericMessageListener {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
-        if (message.equalsIgnoreCase("!goha")) {
+        if (message.equalsIgnoreCase("!com.discord.bot.goha")) {
            sendMessage(event, "3 zł");
         }
 
