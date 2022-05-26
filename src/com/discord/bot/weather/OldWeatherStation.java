@@ -6,7 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.URI;
 import java.net.http.HttpResponse;
 
-public class WeatherStation {
+public class OldWeatherStation {
 
     public String checkWeather(String city, Unit unit) {
         HttpRequest request = HttpRequest.newBuilder()

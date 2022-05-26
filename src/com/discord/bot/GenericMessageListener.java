@@ -1,14 +1,16 @@
 package com.discord.bot;
 
-public abstract class GenericMessageListener {
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-    abstract void onMessageReceived(MessageReceivedEvent event);
+public abstract class GenericMessageListener extends ListenerAdapter {
 
-    private String getDiscordMessage(MessageReceivedEvent event) {
+
+    protected String getDiscordMessage(MessageReceivedEvent event) {
         return event.getMessage().getContentRaw();
     }
 
-    private void sendMessage(MessageReceivedEvent event, String message){
+    protected void sendMessage(MessageReceivedEvent event, String message){
         event.getChannel().sendMessage(message).queue();
     }
 
