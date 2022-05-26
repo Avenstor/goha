@@ -1,4 +1,4 @@
-package weather;
+package com.discord.bot.weather;
 
 public enum Unit {
     METRIC("metric"),
