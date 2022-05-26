@@ -1,36 +1,32 @@
+package weather;
+
+import alexa.Alexa;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public class Commands extends ListenerAdapter {
+public class WeatherListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
-        if (message.equalsIgnoreCase("!goha")) {
-           sendMessage(event, "3 zł");
-        }
-        if (message.equalsIgnoreCase("!tip")) {
-            Tips tips = new Tips();
-            sendMessage(event, tips.rollRandomTip());
-        }
         if (message.startsWith("!weather")) {
-            String weatherMessage = getWeather(event, "imperial");
+            String weatherMessage = getWeather(event, Unit.IMPERIAL);
             sendMessage(event, weatherMessage);
         }
         //pogoda zawiercie
         if (message.startsWith("!pogoda")) {
-            String weatherMessage = getWeather(event, "metric");
+            String weatherMessage = getWeather(event, Unit.METRIC);
             sendMessage(event, weatherMessage);
         }
     }
 
-    private String getWeather(MessageReceivedEvent event, String unit) {
+    private String getWeather(MessageReceivedEvent event, Unit unit) {
         String asd = event.getMessage().getContentRaw();
         String[] words = asd.split(" ");
         if (words.length < 2) {
             return "oj nie nie byczq -1";
         } else {
-            Weather weather = new Weather();
-            return weather.checkWeather(words[1], unit);
+            WeatherStation weatherStation = new WeatherStation();
+            return weatherStation.checkWeather(words[1], unit);
         }
     }
 
