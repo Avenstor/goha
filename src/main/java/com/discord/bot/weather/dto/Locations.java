@@ -1,16 +1,12 @@
 package com.discord.bot.weather.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 public class Locations {
 
-    private List<LocationDetails> locations;
+    private @Getter @Setter List<LocationDetails> locations;
 
-    public List<LocationDetails> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(List<LocationDetails> locations) {
-        this.locations = locations;
-    }
 }

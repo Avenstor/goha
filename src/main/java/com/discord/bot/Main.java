@@ -15,6 +15,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class Main {
+
+    enum Language {
+        PL,
+        ENG
+    }
+
     public static void main(String[] args) {
 
         JDABuilder jdaBuilder = JDABuilder.createDefault("OTc4ODIzNDIwMzY2MTU5OTAy.G_6jRn.SsXeAyelZKNQo-cIPL-ENz0ocjLpdcrWXT2-3I");
@@ -25,11 +31,6 @@ public class Main {
                 e.printStackTrace();
             }
 
-            //try{
-            //    jda.awaitReady();
-            //} catch (InterruptedException e){
-            //    e.printStackTrace();
-            //}
         // LA market api test
 //        HttpRequest request = HttpRequest.newBuilder()
 //                .uri(URI.create("https://www.lostarkmarket.online/api/export-market-live/Europe%20Central?category=Enhancement%20Material&subcategory=Honing%20Materials"))

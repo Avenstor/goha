@@ -1,10 +1,12 @@
 package com.discord.bot.blackjack;
 
+import lombok.Getter;
+
 public class Card {
 
-    private final Type name;
-    private final Color color;
-    private final int value;
+    private final @Getter Type name;
+    private final @Getter Color color;
+    private final @Getter int value;
     private boolean available;
 
     public Card(Type type, Color color, int value){
@@ -12,18 +14,6 @@ public class Card {
         this.color = color;
         this.value = value;
         this.available = true;
-    }
-
-    public Type getName() {
-        return name;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public int getValue() {
-        return value;
     }
 
     public boolean isAvailable() {

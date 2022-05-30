@@ -1,15 +1,13 @@
 package com.discord.bot.blackjack;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Deck {
 
-    private final List<Card> deck = new ArrayList<>();
-
-    public List<Card> getDeck() {
-        return deck;
-    }
+    private final @Getter List<Card> deck = new ArrayList<>();
 
     public void createDeck52(){
         Type[] values = Type.values();

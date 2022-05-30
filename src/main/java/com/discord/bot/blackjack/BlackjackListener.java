@@ -59,9 +59,5 @@ public class BlackjackListener extends GenericMessageListener {
     private boolean gameExists(String authorId){
         return activeGames.containsKey(authorId);
     }
-    //czy warto uzywac gettera?
-    private Game getActiveGame(String authorId){
-        return activeGames.get(authorId);
-    }
 
 }

@@ -1,16 +1,10 @@
 package com.discord.bot.weather.dto;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 public class CurrentWeather {
 
-    private CurrentWeatherDetails current;
+    private @Getter @Setter  CurrentWeatherDetails current;
 
-    public CurrentWeatherDetails getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(CurrentWeatherDetails current) {
-        this.current = current;
-    }
 }

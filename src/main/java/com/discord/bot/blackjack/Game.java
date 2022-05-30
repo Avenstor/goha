@@ -1,13 +1,16 @@
 package com.discord.bot.blackjack;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Random;
 
 public class Game {
-    private final Deck deck = new Deck();
-    private final Hand playerHand = new Hand();
-    private final Hand computerHand = new Hand();
-    private int playerScore = 0;
-    private int computerScore = 0;
+    private final @Getter Deck deck = new Deck();
+    private final @Getter Hand playerHand = new Hand();
+    private final @Getter Hand computerHand = new Hand();
+    private @Getter @Setter int playerScore = 0;
+    private @Getter @Setter int computerScore = 0;
 
     public void startGame() {
         deck.createDeck52();
@@ -89,31 +92,4 @@ public class Game {
         }
     }
 
-    public Deck getDeck() {
-        return deck;
-    }
-
-    public Hand getPlayerHand() {
-        return playerHand;
-    }
-
-    public Hand getComputerHand() {
-        return computerHand;
-    }
-
-    public int getPlayerScore() {
-        return playerScore;
-    }
-
-    public void setPlayerScore(int playerScore) {
-        this.playerScore = playerScore;
-    }
-
-    public int getComputerScore() {
-        return computerScore;
-    }
-
-    public void setComputerScore(int computerScore) {
-        this.computerScore = computerScore;
-    }
 }

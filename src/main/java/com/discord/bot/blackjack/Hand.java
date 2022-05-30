@@ -1,15 +1,13 @@
 package com.discord.bot.blackjack;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
 
-    private final List<Card> hand = new ArrayList<>();
-
-    public List<Card> getHand() {
-        return hand;
-    }
+    private final @Getter List<Card> hand = new ArrayList<>();
 
     public String getHandDescription() {
         String currentHand = "";

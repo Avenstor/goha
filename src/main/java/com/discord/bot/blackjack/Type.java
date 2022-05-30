@@ -1,5 +1,7 @@
 package com.discord.bot.blackjack;
 
+import lombok.Getter;
+
 public enum Type {
 
     TWO(2),
@@ -16,14 +18,10 @@ public enum Type {
     KING(4),
     ACE(11);
 
-    private final int value;
+    private final @Getter int value;
 
     Type(int value){
         this.value = value;
-    }
-
-    public int getValue() {
-        return value;
     }
 
 }
