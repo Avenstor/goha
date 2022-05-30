@@ -3,9 +3,9 @@ package com.discord.bot.blackjack;
 import java.util.Random;
 
 public class Game {
-    private Deck deck = new Deck();
-    private Hand playerHand = new Hand();
-    private Hand computerHand = new Hand();
+    private final Deck deck = new Deck();
+    private final Hand playerHand = new Hand();
+    private final Hand computerHand = new Hand();
     private int playerScore = 0;
     private int computerScore = 0;
 
@@ -44,19 +44,6 @@ public class Game {
                 deck.getDeck().get(randomCard).setAvailable(false);
             }
         }
-    }
-
-    public String showHand(Hand hand) {
-        int handSize = hand.getHand().size();
-        String currentHand = "";
-        StringBuilder sb = new StringBuilder(currentHand);
-        for(int i=0; i<handSize; i++){
-            int j=i+1;
-            sb.append(j).append(":  ").append(hand.getHand().get(i).getName().toString());
-            sb.append(" of ");
-            sb.append(hand.getHand().get(i).getColor().toString()).append("\n");
-        }
-        return sb.toString();
     }
 
     public void drawCard(Deck deck, Hand hand){
@@ -106,24 +93,12 @@ public class Game {
         return deck;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
-
     public Hand getPlayerHand() {
         return playerHand;
     }
 
-    public void setPlayerHand(Hand playerHand) {
-        this.playerHand = playerHand;
-    }
-
     public Hand getComputerHand() {
         return computerHand;
-    }
-
-    public void setComputerHand(Hand computerHand) {
-        this.computerHand = computerHand;
     }
 
     public int getPlayerScore() {

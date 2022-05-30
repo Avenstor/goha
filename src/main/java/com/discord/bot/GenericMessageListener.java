@@ -14,4 +14,8 @@ public abstract class GenericMessageListener extends ListenerAdapter {
         event.getChannel().sendMessage(message).queue();
     }
 
+    protected String getAuthorId(MessageReceivedEvent event){
+        return event.getAuthor().getId();
+    }
+
 }
