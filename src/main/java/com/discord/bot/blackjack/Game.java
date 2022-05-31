@@ -17,36 +17,11 @@ public class Game {
         dealCards(deck, playerHand, computerHand);
     }
 
-    public void dealCards(Deck deck, Hand player, Hand computer){
-        Random rng = new Random();
-        //1st card for player
-        int randomCard = rng.nextInt(deck.getDeck().size());
-        player.getHand().add(deck.getDeck().get(randomCard));
-        deck.getDeck().get(randomCard).setAvailable(false);
-        //2nd card for computer
-        do {
-            randomCard = rng.nextInt(deck.getDeck().size());
-            if (deck.getDeck().get(randomCard).isAvailable()) {
-                computer.getHand().add(deck.getDeck().get(randomCard));
-            }
-        } while (!deck.getDeck().get(randomCard).isAvailable());
-        deck.getDeck().get(randomCard).setAvailable(false);
-        //3rd card for player
-        while (player.getHand().size() < 2) {
-            randomCard = rng.nextInt(deck.getDeck().size());
-            if(deck.getDeck().get(randomCard).isAvailable()){
-                player.getHand().add(deck.getDeck().get(randomCard));
-                deck.getDeck().get(randomCard).setAvailable(false);
-            }
-        }
-        //4th card for computer
-        while (computer.getHand().size() < 2) {
-            randomCard = rng.nextInt(deck.getDeck().size());
-            if(deck.getDeck().get(randomCard).isAvailable()){
-                computer.getHand().add(deck.getDeck().get(randomCard));
-                deck.getDeck().get(randomCard).setAvailable(false);
-            }
-        }
+    public void dealCards(Deck deck, Hand player, Hand computer) {
+        drawCard(deck, player);
+        drawCard(deck, computer);
+        drawCard(deck, player);
+        drawCard(deck, computer);
     }
 
     public void drawCard(Deck deck, Hand hand){
@@ -78,17 +53,19 @@ public class Game {
         }
     }
 
-    public String result(int playerScore, int computerScore){
-        if (playerScore == 21 && computerScore == 21){
-            return "DRAW";
+    public int result() {
+        int playerScore = getPlayerScore();
+        int computerScore = getComputerScore();
+        if (playerScore == 21 && computerScore == 21) {
+            return 0;
         } else if (playerScore < 21 && computerScore > 21) {
-            return "YOU WIN";
-        } else if (playerScore > computerScore){
-            return "YOU WIN";
-        } else if (playerScore == computerScore){
-            return "DRAW";
+            return 1;
+        } else if (playerScore > computerScore) {
+            return 1;
+        } else if (playerScore == computerScore) {
+            return 0;
         } else {
-            return "YOU LOSE";
+            return -1;
         }
     }
 

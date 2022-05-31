@@ -2,34 +2,34 @@ package com.discord.bot;
 
 import com.discord.bot.alexa.Alexa;
 import com.discord.bot.blackjack.BlackjackListener;
-import com.discord.bot.blackjack.Deck;
+import com.discord.bot.blackjack.languagepack.EnglishMessageService;
+import com.discord.bot.blackjack.languagepack.MessageService;
+import com.discord.bot.blackjack.languagepack.PolishMessageService;
+import com.discord.bot.blackjack.languagepack.SupportedLanguages;
 import com.discord.bot.goha.GohaListener;
 import net.dv8tion.jda.api.JDABuilder;
 import com.discord.bot.weather.WeatherListener;
 
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 public class Main {
 
-    enum Language {
-        PL,
-        ENG
-    }
+//    public static SupportedLanguages lang = SupportedLanguages.EN;
 
     public static void main(String[] args) {
 
+        SupportedLanguages lang = SupportedLanguages.EN;
+        MessageService msgService = languageChoice(lang);
+
         JDABuilder jdaBuilder = JDABuilder.createDefault("OTc4ODIzNDIwMzY2MTU5OTAy.G_6jRn.SsXeAyelZKNQo-cIPL-ENz0ocjLpdcrWXT2-3I");
-            jdaBuilder.addEventListeners(new GohaListener(), new Alexa(), new WeatherListener(), new BlackjackListener());
+            jdaBuilder.addEventListeners(new GohaListener(), new Alexa(), new WeatherListener(), new BlackjackListener(msgService));
             try{
                 jdaBuilder.build();
             } catch (LoginException e){
                 e.printStackTrace();
             }
+
+
 
         // LA market api test
 //        HttpRequest request = HttpRequest.newBuilder()
@@ -41,5 +41,12 @@ public class Main {
 
     }
 
+    private static MessageService languageChoice(SupportedLanguages lang) {
+        if (lang == SupportedLanguages.PL) {
+            return new PolishMessageService();
+        } else {
+            return new EnglishMessageService();
+        }
+    }
 
 }

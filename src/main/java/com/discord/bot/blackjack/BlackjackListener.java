@@ -1,63 +1,90 @@
 package com.discord.bot.blackjack;
 
 import com.discord.bot.GenericMessageListener;
+import com.discord.bot.blackjack.languagepack.MessageService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class BlackjackListener extends GenericMessageListener {
 
     private final Map<String, Game> activeGames = new HashMap<>();
+    private final MessageService msgService;
 
+    public BlackjackListener(MessageService msgService) {
+        this.msgService = msgService;
+    }
+
+    //TODO:
+    // - jedno wywołanie `sendMessage(event, discordMessage)`
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
+        if (event.getAuthor().isBot()) {
+            return;
+        }
         if (message.equalsIgnoreCase("!bj")) {
-            sendMessage(event, """
-                    List of commands:
-                    !bj start - starts a new game against AI
-                    !bj draw - draw a card
-                    !bj pass - stay with your current cards
-                    !bj stop - stop an existing game if it got lost somewhere in the chat""");
+            sendMessage(event, msgService.commandList());
         } else if (message.startsWith("!bj")) {
-            String temp = getDiscordMessage(event);
             String authorId = getAuthorId(event);
+            String temp = getDiscordMessage(event);
             String[] words = temp.split(" ");
-            if (words[1].equalsIgnoreCase("start") && !gameExists(authorId)) {
-                activeGames.put(authorId, new Game());
-                activeGames.get(authorId).startGame();
-                sendMessage(event, "Your hand: \n" + activeGames.get(authorId).getPlayerHand().getHandDescription());
-            } else if (words[1].equalsIgnoreCase("start") && gameExists(authorId)){
-                sendMessage(event, "You need to finish your current game before starting a new one.");
-            } else if (words[1].equalsIgnoreCase("pass") && gameExists(authorId)) {
-                activeGames.get(authorId).setPlayerScore(activeGames.get(authorId).calculateScore(activeGames.get(authorId).getPlayerHand()));
-                sendMessage(event, "You have passed your turn.\nYour score: " + activeGames.get(authorId).getPlayerScore());
-                activeGames.get(authorId).computerBehavior(activeGames.get(authorId).getDeck(), activeGames.get(authorId).getComputerHand());
-                activeGames.get(authorId).setComputerScore(activeGames.get(authorId).calculateScore(activeGames.get(authorId).getComputerHand()));
-                sendMessage(event, "The AI has scored " + activeGames.get(authorId).getComputerScore() + " with following cards:\n" + activeGames.get(authorId).getComputerHand().getHandDescription());
-                sendMessage(event, activeGames.get(authorId).result(activeGames.get(authorId).getPlayerScore(), activeGames.get(authorId).getComputerScore()));
-                activeGames.remove(authorId);
-            } else if (words[1].equalsIgnoreCase("draw") && gameExists(authorId)) {
-                activeGames.get(authorId).drawCard(activeGames.get(authorId).getDeck(), activeGames.get(authorId).getPlayerHand());
-                sendMessage(event, "Your hand: \n" + activeGames.get(authorId).getPlayerHand().getHandDescription());
-                if(activeGames.get(authorId).calculateScore(activeGames.get(authorId).getPlayerHand()) > 21){
-                    sendMessage(event, "Your score exceeded 21.\nYOU LOSE");
-                    activeGames.remove(authorId);
-                }
-            } else if (words[1].equalsIgnoreCase("stop") && gameExists(authorId)){
-                activeGames.remove(authorId);
-                sendMessage(event, "Your active game has been terminated.");
-            } else if (words[1].equalsIgnoreCase("stop") && !gameExists(authorId)){
-                sendMessage(event, "There is no on-going game.");
-            }else {
-                sendMessage(event, "Wrong command. Type !bj for command list.");
+            String discordMessage;
+            if (gameExists(authorId)) {
+                discordMessage = switch (words[1].toLowerCase(Locale.ROOT)) {
+                    case "start" -> msgService.existingGameErrorMsg();
+                    case "pass" -> finishTurn(authorId);
+                    case "draw" -> drawCard(authorId);
+                    case "stop" -> terminateGame(authorId);
+                    default -> msgService.wrongCommandErrorMsg();
+                };
+                sendMessage(event, discordMessage);
+            } else {
+                discordMessage = switch (words[1].toLowerCase(Locale.ROOT)) {
+                    case "start" -> createNewGame(authorId);
+                    case "stop" -> terminateGame(authorId);
+                    default -> msgService.wrongCommandErrorMsg();
+                };
+                sendMessage(event, discordMessage);
             }
-
         }
     }
 
-    private boolean gameExists(String authorId){
+    private boolean gameExists(String authorId) {
         return activeGames.containsKey(authorId);
     }
 
+    private String createNewGame(String authorId) {
+        activeGames.put(authorId, new Game());
+        activeGames.get(authorId).startGame();
+        return msgService.playerHandMsg(activeGames.get(authorId).getPlayerHand());
+    }
+
+    private String finishTurn(String authorId) {
+        //TODO: dlaczego mamy tutaj 3 wywołania na obiekcie game, zoptymalizować
+        activeGames.get(authorId).setPlayerScore(activeGames.get(authorId).calculateScore(activeGames.get(authorId).getPlayerHand()));
+        activeGames.get(authorId).computerBehavior(activeGames.get(authorId).getDeck(), activeGames.get(authorId).getComputerHand());
+        activeGames.get(authorId).setComputerScore(activeGames.get(authorId).calculateScore(activeGames.get(authorId).getComputerHand()));
+        activeGames.remove(authorId);
+        return msgService.finishTurnMsg(activeGames.get(authorId).getPlayerScore()) + "\n" +
+                msgService.computerScoreMsg(activeGames.get(authorId).getComputerScore(), activeGames.get(authorId).getComputerHand()) + "\n" +
+                msgService.resultMsg(activeGames.get(authorId).result());
+    }
+
+    private String drawCard(String authorId) {
+        //TODO: dlaczego mamy tutaj 2 wywołania na obiekcie game, zoptymalizować
+        activeGames.get(authorId).drawCard(activeGames.get(authorId).getDeck(), activeGames.get(authorId).getPlayerHand());
+        if (activeGames.get(authorId).calculateScore(activeGames.get(authorId).getPlayerHand()) > 21) {
+            activeGames.remove(authorId);
+        }
+        return msgService.playerHandMsg(activeGames.get(authorId).getPlayerHand()) + "\n" +
+                msgService.scoreExceededMsg();
+    }
+
+    private String terminateGame(String authorId) {
+        activeGames.remove(authorId);
+        return msgService.terminateGameActionMsg();
+    }
 }
