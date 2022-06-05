@@ -8,17 +8,11 @@ public interface MessageService {
 
     String playerHandMsg(Hand hand);
 
-    String finishTurn(int playerScore, int computerScore, Hand computerHand);
-
-    String computerScoreMsg(int score, Hand hand);
-
-    String finishTurnMsg(int score);
+    String finishTurnMsg(int result, int playerScore, int computerScore, Hand computerHand);
 
     String terminateGameActionMsg();
 
-    String scoreExceededMsg();
-
-    String resultMsg(int result);
+    String scoreExceededMsg(Hand hand);
 
     String existingGameErrorMsg();
 

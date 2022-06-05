@@ -7,11 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public class WeatherListener extends GenericMessageListener {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
-        if (message.startsWith("!weather")) {
-            String weatherMessage = getWeather(event);
-            sendMessage(event, weatherMessage);
-        }
-        if (message.startsWith("!pogoda")) {
+        if (message.startsWith("!weather") || message.startsWith("!pogoda")) {
             String weatherMessage = getWeather(event);
             sendMessage(event, weatherMessage);
         }

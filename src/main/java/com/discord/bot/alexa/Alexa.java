@@ -25,8 +25,7 @@ public class Alexa extends GenericMessageListener {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         String message = getDiscordMessage(event);
         if (message.equalsIgnoreCase("!tip")) {
-            Alexa alexa = new Alexa();
-            sendMessage(event, alexa.rollRandomTip());
+            sendMessage(event, rollRandomTip());
         }
     }
 

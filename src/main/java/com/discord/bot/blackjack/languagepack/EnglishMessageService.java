@@ -20,20 +20,19 @@ public class EnglishMessageService implements MessageService {
     }
 
     @Override
-    public String finishTurn(int playerScore, int computerScore, Hand computerHand) {
-
-
-        return null;
-    }
-
-    @Override
-    public String computerScoreMsg(int score, Hand hand) {
-        return "The AI has scored " + score + " with following cards:\n" + hand.getHandDescription();
-    }
-
-    @Override
-    public String finishTurnMsg(int score) {
-        return "You have passed your turn.\nYour score: " + score;
+    public String finishTurnMsg(int result, int playerScore, int computerScore, Hand computerHand) {
+        String message = "You have passed your turn.\nYour score: " + playerScore
+                + "\nThe AI has scored " + computerScore
+                + " with following cards:\n" + computerHand.getHandDescription() + "\n";
+        StringBuilder sb = new StringBuilder(message);
+        if(result == 1){
+            sb.append("YOU WIN");
+        } else if (result == 0) {
+            sb.append("DRAW");
+        } else {
+            sb.append("YOU LOSE");
+        }
+        return sb.toString();
     }
 
     @Override
@@ -42,19 +41,8 @@ public class EnglishMessageService implements MessageService {
     }
 
     @Override
-    public String scoreExceededMsg() {
-        return "Your score exceeded 21.\nYOU LOSE";
-    }
-
-    @Override
-    public String resultMsg(int result) {
-        if(result == 1){
-            return "YOU WIN";
-        } else if (result == 0) {
-            return "DRAW";
-        } else {
-            return "YOU LOSE";
-        }
+    public String scoreExceededMsg(Hand hand) {
+        return playerHandMsg(hand) + "\nYour score exceeded 21.\nYOU LOSE";
     }
 
     @Override

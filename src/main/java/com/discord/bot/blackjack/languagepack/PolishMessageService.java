@@ -20,18 +20,19 @@ public class PolishMessageService implements MessageService {
     }
 
     @Override
-    public String finishTurn(int playerScore, int computerScore, Hand computerHand) {
-        return null;
-    }
-
-    @Override
-    public String computerScoreMsg(int score, Hand hand) {
-        return "AI uzyskało " + score + " z kartami:\n" + hand.getHandDescription();
-    }
-
-    @Override
-    public String finishTurnMsg(int score) {
-        return "Zakończyłeś swoją turę.\nTwój wynik: " + score;
+    public String finishTurnMsg(int result, int playerScore, int computerScore, Hand computerHand) {
+        String message = "Zakończyłeś swoją turę.\nTwój wynik: " + playerScore
+                + "\nAI uzyskało " + computerScore
+                + " z kartami:\n" + computerHand.getHandDescription() + "\n";
+        StringBuilder sb = new StringBuilder(message);
+        if(result == 1){
+            sb.append("WYGRAŁEŚ");
+        } else if (result == 0) {
+            sb.append("REMIS");
+        } else {
+            sb.append("PRZEGRAŁEŚ");
+        }
+        return sb.toString();
     }
 
     @Override
@@ -40,19 +41,8 @@ public class PolishMessageService implements MessageService {
     }
 
     @Override
-    public String scoreExceededMsg() {
-        return "Twój wynik przekroczył 21.\nPRZEGRAŁEŚ";
-    }
-
-    @Override
-    public String resultMsg(int result) {
-        if(result == 1){
-            return "WYGRAŁEŚ";
-        } else if (result == 0) {
-            return "REMIS";
-        } else {
-            return "PRZEGRAŁEŚ";
-        }
+    public String scoreExceededMsg(Hand hand) {
+        return playerHandMsg(hand) + "\nTwój wynik przekroczył 21.\nPRZEGRAŁEŚ";
     }
 
     @Override
