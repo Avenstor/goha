@@ -19,7 +19,7 @@ public class Main {
         SupportedLanguages lang = SupportedLanguages.EN;
         MessageService msgService = languageChoice(lang);
 
-        JDABuilder jdaBuilder = JDABuilder.createDefault("OTc4ODIzNDIwMzY2MTU5OTAy.G_6jRn.SsXeAyelZKNQo-cIPL-ENz0ocjLpdcrWXT2-3I");
+        JDABuilder jdaBuilder = JDABuilder.createDefault(System.getenv("discord_token"));
             jdaBuilder.addEventListeners(new GohaListener(), new Alexa(), new WeatherListener(), new BlackjackDiscordListener(msgService));
             try{
                 jdaBuilder.build();
