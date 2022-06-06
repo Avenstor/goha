@@ -30,6 +30,7 @@ public class Blackjack {
                 };
             } else {
                 return switch (words[1].toLowerCase(Locale.ROOT)) {
+                    case "rules" -> msgService.displayRules();
                     case "start" -> createNewGame(authorId);
                     case "stop" -> msgService.noActiveGameErrorMsg();
                     default -> msgService.wrongCommandErrorMsg();

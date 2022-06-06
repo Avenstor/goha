@@ -6,6 +6,8 @@ public interface MessageService {
 
     String commandList();
 
+    String displayRules();
+
     String playerHandMsg(Hand hand);
 
     String finishTurnMsg(int result, int playerScore, int computerScore, Hand computerHand);

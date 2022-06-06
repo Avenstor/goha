@@ -3,6 +3,7 @@ package com.discord.bot.weather;
 import com.discord.bot.weather.dto.CurrentWeather;
 import com.discord.bot.weather.dto.Locations;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+@Slf4j
 public class NewWeatherStation {
 
     public String checkWeather(String city) {
@@ -37,7 +39,8 @@ public class NewWeatherStation {
                 return forecast;
             }
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            return "Data unavailable";
         }
 
 
@@ -47,7 +50,7 @@ public class NewWeatherStation {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://foreca-weather.p.rapidapi.com/location/search/" + city))
                 .header("X-RapidAPI-Host", "foreca-weather.p.rapidapi.com")
-                .header("X-RapidAPI-Key", "c23f6752d8msh8eda1a86d7e3a25p146f4bjsnf18a9e5e700f")
+                .header("X-RapidAPI-Key", System.getenv("foreca_api_key"))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         try {

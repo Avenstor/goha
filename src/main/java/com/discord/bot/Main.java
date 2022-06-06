@@ -16,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //language setting: .EN/.PL
         SupportedLanguages lang = SupportedLanguages.EN;
         MessageService msgService = languageChoice(lang);
 

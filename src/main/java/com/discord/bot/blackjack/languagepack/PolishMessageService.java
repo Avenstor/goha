@@ -7,10 +7,23 @@ public class PolishMessageService implements MessageService {
     public String commandList() {
         return """
                 Lista komend:
+                !bj rules - wyświetl zasady gry
                 !bj start - rozpocznij nową gre
                 !bj draw  - dobierz kartę
                 !bj pass - zakończ swoją turę z obecnymi kartami
                 !bj stop - zakończ proces aktywnej gry
+                """;
+    }
+
+    @Override
+    public String displayRules() {
+        return """
+                Celem gry jest zebranie 21 punktów.
+                Możesz jedynie dobierać nowe karty lub pozostać z obecnymi passując.
+                Jeśli masz więcej niż 21 punktów - przegrywasz.
+                Jeśli nikt nie ma 21 punktów, osoba z wynikiem bliższym do 21 wygrywa.
+                Karty numeryczne mają tą samą ilość punktów przypisaną do nich. DWÓJKA ma 2 punkty, TRÓJKA ma 3 punkty itd.
+                Walet = 2 pkt, Królowa = 3 pkt, Król = 4 pkt, As = 11 pkt
                 """;
     }
 
