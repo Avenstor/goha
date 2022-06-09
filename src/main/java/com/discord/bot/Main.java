@@ -7,6 +7,7 @@ import com.discord.bot.blackjack.languagepack.MessageService;
 import com.discord.bot.blackjack.languagepack.PolishMessageService;
 import com.discord.bot.blackjack.languagepack.SupportedLanguages;
 import com.discord.bot.goha.GohaListener;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import com.discord.bot.weather.WeatherListener;
 
@@ -21,14 +22,20 @@ public class Main {
         MessageService msgService = languageChoice(lang);
 
         JDABuilder jdaBuilder = JDABuilder.createDefault(System.getenv("discord_token"));
-            jdaBuilder.addEventListeners(new GohaListener(), new Alexa(), new WeatherListener(), new BlackjackDiscordListener(msgService));
-            try{
-                jdaBuilder.build();
-            } catch (LoginException e){
-                e.printStackTrace();
-            }
 
+        try{
+            JDA jda = jdaBuilder.addEventListeners(new GohaListener(), new Alexa(), new WeatherListener()).build();
+            jda.addEventListener( new BlackjackDiscordListener(msgService, jda));
+        } catch (LoginException e){
+            e.printStackTrace();
+        }
 
+//            jdaBuilder.addEventListeners(new GohaListener(), new Alexa(), new WeatherListener(), new BlackjackDiscordListener(msgService));
+//            try{
+//                jdaBuilder.build();
+//            } catch (LoginException e){
+//                e.printStackTrace();
+//            }
 
         // LA market api test
 //        HttpRequest request = HttpRequest.newBuilder()

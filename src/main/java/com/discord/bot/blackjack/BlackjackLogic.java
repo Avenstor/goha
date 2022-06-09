@@ -2,38 +2,62 @@ package com.discord.bot.blackjack;
 
 import lombok.Getter;
 
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 public class BlackjackLogic {
     private final Deck deck = new Deck();
-    private final Hand playerHand = new Hand();
-    private final Hand computerHand = new Hand();
+    @Getter
+    private final List<Hand> hands = new ArrayList<>();
+    @Getter
+    private final long authorDiscordId;
 
-    private int playerScore = 0;
+    public BlackjackLogic(long authorId) {
+        hands.add(new Hand(authorId));
+        hands.add(new Hand());
+        authorDiscordId = authorId;
+    }
 
-    private int computerScore = 0;
+    public BlackjackLogic(long authorId, long secondPlayerId) {
+        hands.add(new Hand(authorId));
+        hands.add(new Hand(secondPlayerId));
+        authorDiscordId = authorId;
+    }
 
     public void startGame() {
         deck.createDeck52();
-        dealCards(deck, playerHand, computerHand);
+        dealCards(deck, hands.get(0), hands.get(1));
     }
 
-    public void finishTurn(){
-        playerScore = calculateScore(getPlayerHand());
-        computerBehavior(deck, computerHand);
-        computerScore = calculateScore(getComputerHand());
+    public void finishTurn(long authorId){
+        hands.get(getIndexByAuthorId(authorId)).calculateScore();
+        if(hands.get(1).getHandId() == 0){
+            computerBehavior(deck, hands.get(1));
+            hands.get(1).calculateScore();
+        }
     }
 
-    public boolean isPlayerScoreOver21(){
-        return calculateScore(playerHand) > 21;
+
+    //TODO: Find suitable list method instead of reinventing wheel xD
+    public int getIndexByAuthorId(long authorId){
+        for(int i = 0; i < hands.size(); i++){
+            if(hands.get(i) != null && hands.get(i).getHandId() == authorId){
+                return i;
+            }
+        }
+        return 0;
     }
 
-    public void dealCards(Deck deck, Hand player, Hand computer) {
-        drawCard(deck, player);
-        drawCard(deck, computer);
-        drawCard(deck, player);
-        drawCard(deck, computer);
+    public boolean isPlayerScoreOver21(Hand hand){
+        return hand.calculateScore() > 21;
+    }
+
+    public void dealCards(Deck deck, Hand playerOne, Hand playerTwo) {
+        drawCard(deck, playerOne);
+        drawCard(deck, playerTwo);
+        drawCard(deck, playerOne);
+        drawCard(deck, playerTwo);
     }
 
     public void drawCard(Deck deck, Hand hand) {
@@ -57,19 +81,19 @@ public class BlackjackLogic {
         return score;
     }
 
-    private void computerBehavior(Deck deck, Hand computer) {
-        int computerScore = calculateScore(computer);
-        while (computerScore <= 16) {
-            drawCard(deck, computer);
-            computerScore = calculateScore(computer);
+    private void computerBehavior(Deck deck, Hand player) {
+        int score = player.calculateScore();
+        while (score <= 16) {
+            drawCard(deck, player);
+            score = player.calculateScore();
         }
     }
 
 
 
-    public int result() {
-        int playerScore = getPlayerScore();
-        int computerScore = getComputerScore();
+    public int singleplayerResult() {
+        int playerScore = hands.get(0).getScore();
+        int computerScore = hands.get(1).getScore();
         if (playerScore == 21 && computerScore == 21) {
             return 0;
         } else if (playerScore < 21 && computerScore > 21) {
